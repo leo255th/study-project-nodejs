@@ -13,13 +13,13 @@ export function tokenGenerate(payload: {
   accessToken: string,
   refreshToken: string
 } {
-
+  console.log('payload');
   const accessToken = jwt.sign({
     data: JSON.stringify(payload),
     exp: Math.floor(Date.now() / 1000) + (60),  // 在这里设置过期的时间，单位：秒
   }, PRIVATE_KEY, { algorithm: 'ES256' });
   const refreshToken = jwt.sign({
-    data: JSON.stringify(payload),
+    data: payload,
     exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 30),  // 在这里设置过期的时间，要远远大于accessToken
   }, PRIVATE_KEY, { algorithm: 'ES256' });
   return {
@@ -34,9 +34,10 @@ export async function tokenVerify(token: {
 }): Promise<{ res: boolean, accessToken?: string, refreshToken?: string }> {
 
   return new Promise<{ res: boolean, accessToken?: string, refreshToken?: string }>((resolve, reject) => {
-    jwt.verify(token.accessToken, PUBLIC_KEY, { algorithms: ['ES256'] }, (err, decode) => {
+    jwt.verify(token.accessToken, PUBLIC_KEY, { algorithms: ['ES256'] }, (err, decoded) => {
       if (!err) {
         // 验证通过
+        console.log('验证通过,decode是：',decoded)
         resolve({
           res: true,
         })
@@ -45,8 +46,8 @@ export async function tokenVerify(token: {
         try {
           jwt.verify(token.refreshToken, PUBLIC_KEY, { algorithms: ['ES256'] });
           // 验证通过
-          console.log('原来的decode:', decode)
-          const { accessToken, refreshToken } = tokenGenerate(decode);
+          console.log('原来的decode:', decoded)
+          const { accessToken, refreshToken } = tokenGenerate(decoded);
           resolve({
             res: true,
             accessToken,
