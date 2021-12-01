@@ -13,7 +13,7 @@ export function tokenGenerate(payload: {
   accessToken: string,
   refreshToken: string
 } {
-  console.log('payload');
+  console.log('payload',payload);
   const accessToken = jwt.sign({
     data: JSON.stringify(payload),
     exp: Math.floor(Date.now() / 1000) + (60),  // 在这里设置过期的时间，单位：秒
@@ -46,8 +46,9 @@ export async function tokenVerify(token: {
         try {
           jwt.verify(token.refreshToken, PUBLIC_KEY, { algorithms: ['ES256'] });
           // 验证通过
-          console.log('原来的decode:', decoded)
-          const { accessToken, refreshToken } = tokenGenerate(decoded);
+          const data=jwt.decode(token.accessToken,PUBLIC_KEY, { algorithms: ['ES256'] }).data;
+          console.log('原来的decode.data:', data)
+          const { accessToken, refreshToken } = tokenGenerate(data);
           resolve({
             res: true,
             accessToken,
