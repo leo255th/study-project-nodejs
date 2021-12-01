@@ -39,8 +39,9 @@ export function tokenVerify(token:{
       res: true
     };
   } catch (e) {
-    console.error(e);
+    console.log(e);
     // 如果token过期，验证refreshToken，如果没过期，生成新的accessToken和resfreshToken
+
     return {
       res:false
     }
