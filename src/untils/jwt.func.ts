@@ -2,8 +2,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as jwt from 'jsonwebtoken'
 
-const PRIVATE_KEY = fs.readFileSync(path.resolve('../../resources/es256-pri.pem'));
-const PUBLIC_KEY = fs.readFileSync(path.resolve('../../resources/es256-pub.pem'));
+const PRIVATE_KEY = fs.readFileSync(path.resolve('../../resources/ecc-private-key.pem'));
+const PUBLIC_KEY = fs.readFileSync(path.resolve('../../resources/ecc-public-key.pem'));
 
 export function tokenGenerate(payload: {
   user: string,
