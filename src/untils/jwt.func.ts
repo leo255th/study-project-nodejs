@@ -32,60 +32,36 @@ export async function tokenVerify(token: {
   accessToken: string,
   refreshToken: string
 }): Promise<{ res: boolean, accessToken?: string, refreshToken?: string }> {
-  return new Promise<{ res: boolean, accessToken?: string, refreshToken?: string }>((resolve,reject)=>{
+
+  return new Promise<{ res: boolean, accessToken?: string, refreshToken?: string }>((resolve, reject) => {
     jwt.verify(token.accessToken, PUBLIC_KEY, { algorithms: ['ES256'] }, (err, decode) => {
       if (!err) {
         // 验证通过
         resolve({
-          res:true,
+          res: true,
         })
-      }else if(err.name='TokenExpiredError'){
+      } else if (err.name = 'TokenExpiredError') {
         // token过期，验证refreshToken
-        try{
+        try {
           jwt.verify(token.refreshToken, PUBLIC_KEY, { algorithms: ['ES256'] });
           // 验证通过
-          console.log('原来的decode:',decode)
-          const {accessToken,refreshToken}=tokenGenerate(decode);
+          console.log('原来的decode:', decode)
+          const { accessToken, refreshToken } = tokenGenerate(decode);
           resolve({
-            res:true,
+            res: true,
             accessToken,
             refreshToken
           })
         }
-        catch(err){
+        catch (err) {
           // refreshToken验证不通过
           resolve({
-            res:false
+            res: false
           })
         }
       }
-  });
-  const res = jwt.verify(token.accessToken, PUBLIC_KEY, { algorithms: ['ES256'] }, (err, decode) => {
-    if (!err) {
-      // 验证通过
-      return {
-        res:true,
-      }
-    }
+
+    });
+
   })
-
-  // try {
-  //   // 先验证accessToken
-  //   const data: any = jwt.verify(token.accessToken, PUBLIC_KEY, { algorithms: ['ES256'] },);
-  //   return {
-  //     res: true
-  //   };
-  // } catch (e) {
-  //   console.log('e.name:',e.name);
-  //   console.log('e.message:',e.message);
-  //   // 如果token过期，验证refreshToken，如果没过期，生成新的accessToken和resfreshToken
-  //   if(e.name=='TokenExpiredError'){
-
-  //     const {accessToken,refreshToken}=tokenGenerate(data);
-  //   }
-  //   return {
-  //     res:false
-  //   }
-
-  // }
 }
