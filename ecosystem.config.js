@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
     name :'study-test-backend',
-    script: 'dist/src/main.js',
+    script: 'dist/main.js',
     namespace:'study-test',
     err_file    : "pm2logs/err.log",
     out_file    : "pm2logs/out.log",
